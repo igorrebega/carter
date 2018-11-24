@@ -11,7 +11,9 @@
 |
 */
 
-Route::get('info/{number}', 'CarController@getInfo');
+Route::get('process', 'DataController@process');
+
+Route::get('info', 'CarController@getInfo');
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
