@@ -28,7 +28,7 @@ class CarController extends Controller
             'capacity'  => '1',
             'weight'    => '1',
             'number'    => 'c',
-            'avg_price' => 0,
+            'avg_price' => '0',
         ];
     }
 }
