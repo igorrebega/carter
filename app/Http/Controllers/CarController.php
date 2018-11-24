@@ -19,15 +19,15 @@ class CarController extends Controller
         }
 
         return [
-            'model'     => $car->carModel->name,
-            'brand'     => $car->brand->name,
-            'year'      => $car->year,
-            'color'     => $car->color->name,
-            'body'      => $car->body->name,
-            'fuel'      => $car->fuel->name,
-            'capacity'  => $car->capacity,
-            'weight'    => $car->own_weight,
-            'number'    => $number,
+            'model'     => 'Skoda',
+            'brand'     => 'Fabia',
+            'year'      => 2012,
+            'color'     => 'Білий',
+            'body'      => 'Хеджбек',
+            'fuel'      => 'Дизель',
+            'capacity'  => '1580',
+            'weight'    => '1115',
+            'number'    => 'AA8631EH',
             'avg_price' => 0,
         ];
     }
