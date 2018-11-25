@@ -13,7 +13,9 @@
 
 Route::get('process', 'DataController@process');
 
-Route::get('info', 'CarController@getInfo');
+Route::post('info', 'CarController@getInfo');
+
+Route::get('test', 'CarController@testImage');
 
 $router->get('/', function () use ($router) {
     return $router->app->version();

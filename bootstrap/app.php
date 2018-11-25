@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Filesystem\FilesystemServiceProvider;
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 try {
@@ -26,7 +28,6 @@ $app = new Laravel\Lumen\Application(
 $app->withFacades();
 
 $app->withEloquent();
-
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -47,6 +48,20 @@ $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
 );
+
+$app->singleton(
+    Illuminate\Contracts\Filesystem\Factory::class,
+    function ($app) {
+        return $app->loadComponent('filesystems',
+            FilesystemServiceProvider::class, 'filesystem');
+    }
+);
+
+$app->singleton('filesystem', function ($app) {
+    return $app->loadComponent('filesystems',
+        FilesystemServiceProvider::class, 'filesystem');
+});
+
 
 /*
 |--------------------------------------------------------------------------

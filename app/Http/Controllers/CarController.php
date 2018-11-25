@@ -5,17 +5,42 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use thiagoalessio\TesseractOCR\TesseractOCR;
 
 class CarController extends Controller
 {
+    public function getNumber($image)
+    {
+        $result = $this->run('alpr --country eu --json ' . $image);
+
+        $result = json_decode($result[0]);
+
+        if (! isset($result->results[0])) {
+            return '';
+        }
+
+        return $result->results[0]->plate;
+    }
+
+    function run($command)
+    {
+        $output = array();
+        exec($command, $output);
+
+        return $output;
+    }
+
     public function getInfo(Request $request)
     {
-        \Log::info($request->all());
-        \Log::info($request->headers->all());
-        $number = $request->get('number');
-        $number = $this->convert($number);
+        $name = time() . '.jpg';
+        $request->file('imagefile')->storeAs('images', $name);
+
+        $number = $this->getNumber(storage_path('app/images/' . $name));
+        \Log::info('----');
+
         \Log::info($number);
 
+        $number = $this->convert($number);
         $car = Car::query()->where(['number' => $number])->first();
 
         if (! $car) {
@@ -49,151 +74,20 @@ class CarController extends Controller
     private function convert($input)
     {
         $cyr = [
-            'а',
-            'б',
-            'в',
-            'г',
-            'д',
-            'е',
-            'ё',
-            'ж',
-            'з',
-            'и',
-            'й',
-            'к',
-            'л',
-            'м',
-            'н',
-            'о',
-            'п',
-            'р',
-            'с',
-            'т',
-            'у',
-            'ф',
-            'х',
-            'ц',
-            'ч',
-            'ш',
-            'щ',
-            'ъ',
-            'ы',
-            'ь',
-            'э',
-            'ю',
-            'я',
+            'Х',
             'А',
-            'Б',
-            'В',
-            'Г',
-            'Д',
-            'Е',
-            'Ё',
-            'Ж',
-            'З',
-            'I',
-            'Й',
-            'К',
-            'Л',
+            'Т',
             'М',
+            'С',
+            'В',
+            'К',
+            'Р',
             'Н',
+            'Е',
             'О',
-            'П',
-            'Р',
-            'С',
-            'Т',
-            'У',
-            'Ф',
-            'Х',
-            'Ц',
-            'Ч',
-            'Ш',
-            'Щ',
-            'I',
-            'І',
-            'Ь',
-            'Э',
-            'Ю',
-            'Я',
-            'Х',
-            'А',
-            'Т',
-            'М',
-            'С',
-            'В',
-            'К',
-            'Р',
-            'Н',
-            'Е',
-            'О'
+            'І'
         ];
         $lat = [
-            'a',
-            'b',
-            'v',
-            'g',
-            'd',
-            'e',
-            'io',
-            'zh',
-            'z',
-            'i',
-            'y',
-            'k',
-            'l',
-            'm',
-            'n',
-            'o',
-            'p',
-            'r',
-            's',
-            't',
-            'u',
-            'f',
-            'h',
-            'ts',
-            'ch',
-            'sh',
-            'sht',
-            'a',
-            'i',
-            'y',
-            'e',
-            'yu',
-            'ya',
-            'A',
-            'B',
-            'V',
-            'G',
-            'D',
-            'E',
-            'Io',
-            'Zh',
-            'Z',
-            'I',
-            'Y',
-            'K',
-            'L',
-            'M',
-            'N',
-            'O',
-            'P',
-            'R',
-            'S',
-            'T',
-            'U',
-            'F',
-            'H',
-            'Ts',
-            'Ch',
-            'Sh',
-            'Sht',
-            'A',
-            'I',
-            'Y',
-            'e',
-            'Yu',
-            'Ya',
             'X',
             'A',
             'T',
@@ -204,7 +98,8 @@ class CarController extends Controller
             'P',
             'H',
             'E',
-            'O'
+            'O',
+            'I'
         ];
         $input = str_replace($lat, $cyr, $input);
 
