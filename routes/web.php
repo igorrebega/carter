@@ -18,3 +18,5 @@ Route::get('info', 'CarController@getInfo');
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+

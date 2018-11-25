@@ -35,7 +35,10 @@ class Process extends Command
      */
     public function handle()
     {
-        $handle = fopen(storage_path('app/data/2013.csv'), 'rb');
+        $name = readline("Enter a file: ");
+        echo 'You picked the number: '.$name;
+
+        $handle = fopen(storage_path('app/data/'.$name.'.csv'), 'rb');
         $header = true;
 
         $i = 0;
